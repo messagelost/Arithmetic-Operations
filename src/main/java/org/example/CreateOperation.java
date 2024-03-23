@@ -1,17 +1,19 @@
-package com.jacob;
+package org.example;
 
 import java.util.Arrays;
 import java.util.Random;
 
-public class CreateOperation {
-    public static int nValue;
-    public static int rValue;
+public class CreateOperation {    public static int nValue;//生成题目个数
 
-    public static void main(String[] args) {
+    public static int rValue;//题目中数值范围
+     public static void main(String[] args) {
         int n = nValue;
         int r = rValue;
-        r = 10;
-        char[] e = Origin(r);//数组e储存式子
+        r =10;
+        char []operater=Operator(r);
+        int []decide=Decide(operater);
+        int []calNumber=CalNumber(decide,r);
+        char[] e = My_string(decide,operater,calNumber).toCharArray();//数组e储存式子
         boolean CorreatOperation = true;
         while(true) {//判读式子是否正确
             for (int i = 0; i < e.length - 1; i++) {
@@ -23,22 +25,19 @@ public class CreateOperation {
                 break;//式子合格跳出循环
             } else {
                 CorreatOperation = true;
-                e = Origin(r);//再次生成式子
+                e = My_string(decide,operater,calNumber).toCharArray();//再次生成式子
             }
         }
         System.out.println(Arrays.toString(e));
     }
 
-    public static char[] Origin(int r) {
+    public static char[] Operator(int r) {
         Random random = new Random();
-
-        char[] operator = new char[3];//数组存储运算符
-
-        int operatorNumber = random.nextInt(3)+1;//随机生成1到3个运算符
-
+        int operatorNumber = random.nextInt(3) + 1;//随机生成1到3个运算符
+        char[] operator = new char[operatorNumber];//数组存储运算符
         for (int i = 0; i < operatorNumber; i++) {//随机生成运算符
             int randomnumber = random.nextInt(4) + 1;
-            switch (randomnumber){
+            switch (randomnumber) {
                 case 1://生成加号
                     operator[i] = '+';
                     break;
@@ -51,45 +50,70 @@ public class CreateOperation {
                 case 4://生成除号
                     operator[i] = '\u00F7';
                     break;
-                default:
-                    break;
             }
         }
+        return operator;
+    }
+        public static int[]Decide(char [] operater){
 
+        int operatorNumber=operater.length+1;
+        Random random = new Random();
         int calnumber = 0;
-        int[] decide = new int[operatorNumber+1];//数组记录决定生成自然数（记为0）或真分数（记为1）
-        for (int i = 0; i <= operatorNumber; i++) {//决定生成自然数或者真分数
+        int[] decide = new int[operatorNumber +1];//数组记录决定生成自然数（记为0）或真分数（记为1）
+        for (int i = 0; i <operatorNumber; i++) {//决定生成自然数或者真分数
             int randomnumber = random.nextInt(2);
-            if(randomnumber==0){
-                decide[i]=0;
+            if (randomnumber == 0) {
+                decide[i] = 0;
                 calnumber++;//自然数在数组中需要一位储存
-            }
-            else {
-                decide[i]=1;
-                calnumber = calnumber +3;//分数在数组中需要三位储存
-            }
-        }
-
-        char[] calNumber = new char[calnumber];//数组储存要进行运算的数字
-        int j = 0;
-        for (int i = 0; i < calnumber; ) {//随机生成数字
-            if(decide[j]==0){//生成自然数
-                int randomnumber = random.nextInt(r);
-                calNumber[i] = (char)(randomnumber+'0');
-                j++;
-                i++;
-            }else{//生成分数
-                char[] faction = ProperFaction(r);
-                for (int i1 = i; i1 < i+3; i1++) {
-                    calNumber[i1]=faction[i1-i];
-                }
-                j++;
-                i = i + 3;
+            } else {
+                decide[i] = 1;
+                calnumber = calnumber + 3;//分数在数组中需要三位储存
             }
         }
+        decide[decide.length-1]=calnumber;
+        return decide;
+    }
 
-        int operationnumber = calnumber+operatorNumber*3+2;//储存生成的式子的式子长度(包括括号)
-        char[] operation = new char[operationnumber];
+       public static int[]CalNumber(int[]decide,int r) {
+           Random random = new Random();
+           int calnumber = decide[decide.length - 1];
+           int[] calNumber = new int[calnumber];//数组储存要进行运算的数字
+           int j = 0;
+           for (int i = 0; i < calnumber; ) {//随机生成数字
+               if (decide[j] == 0) {//生成自然数
+                   int randomnumber = random.nextInt(r);
+                   calNumber[i] = randomnumber;
+                   j++;
+                   i++;
+               } else {//生成分数
+                   int[] faction = ProperFaction(r);
+                   for (int i1 = i; i1 < i + 3; i1++) {
+                       calNumber[i1] = faction[i1 - i];
+                   }
+                   j++;
+                   i = i + 3;
+               }
+           }
+           return calNumber;
+       }
+       public static String My_string(int[]decide,char []operator,int []calNumber){
+           String fomula =  new String();
+           int count = 0;
+           for (int i = 0; i < decide.length - 2; i++) {
+               if (decide[i] == 0) {
+                   fomula = fomula + String.valueOf(calNumber[count++]) + operator[i];
+               } else {
+                   fomula = fomula + String.valueOf(calNumber[count]) + "'" + String.valueOf(calNumber[count + 1]) + "/" + String.valueOf(calNumber[count + 2]) + operator[i];
+                   count += 3;
+               }
+           }
+           fomula = fomula + String.valueOf(calNumber[count]);
+           System.out.println(fomula);
+        return fomula;
+       }
+
+    /*      int operationnumber = calnumber+operatorNumber*3+2;//储存生成的式子的式子长度(包括括号)
+        int[] operation = new int[operationnumber];
         int input = 0;//input为0的时候录入数值，为1的时候录入符号
         j = 0;//记录决定数组
         int k = 0;//记录数值数组
@@ -155,19 +179,24 @@ public class CreateOperation {
                 break;
             }
         }
+*/
 
-        return operation;
-    }
 
-    public static char[] ProperFaction(int r) {
+
+    public static int[] ProperFaction(int r) {
         Random random = new Random();
-        char[] faction = new char[3];
+        int[] faction = new int[3];
+        int real=random.nextInt(r-1)+1;
         int denominator = random.nextInt(r-1)+1;//生成分母
-        int numerator = random.nextInt(denominator);//生成分子
-
-        faction[0] = (char)(numerator+'0');
-        faction[1] = '/';
-        faction[2] = (char)(denominator+'0');
+        int numerator = random.nextInt(denominator)+1;//生成分子
+        faction[0] = real;
+        faction[1] = numerator;
+        faction[2] =  denominator;
         return faction;
+
+    }
+    public static void Answer(String s){
+
+
     }
 }
