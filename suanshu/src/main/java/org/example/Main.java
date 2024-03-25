@@ -17,7 +17,8 @@ public class Main {
         int []calNumber=CalNumber(decide,r);
         TransFraction trans=new TransFraction(operater,calNumber,decide);
         Fraction[] append=trans.tr();
-        Fraction  result=evaluateExpression(operater,append,hesis);
+        char[]e = Create(decide,operater,calNumber);
+        Fraction  result=evaluateExpression(e,decide,append);
         System.out.println(operater);
         System.out.println("运算结果为：" + result.getDenominator());
 

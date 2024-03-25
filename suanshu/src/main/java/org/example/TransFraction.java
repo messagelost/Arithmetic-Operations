@@ -29,9 +29,9 @@ private  int []decide;
                 k+=2;
             }
         }
-        /*for (int i = 0; i < decide.length-1; i++) {
-            System.out.printf("%d,%d,%d\n",fra[i].getWholeNumber(),fra[i].getNumerator(),fra[i].getDenominator());
-        }*/
+//        for (int i = 0; i < decide.length-1; i++) {
+//            System.out.printf("%d,%d,%d\n",fra[i].getWholeNumber(),fra[i].getNumerator(),fra[i].getDenominator());
+//        }
         return fra;
     }
 

@@ -45,9 +45,9 @@ public class Fraction {
             throw new IllegalArgumentException("Denominator cannot be zero");
         }
 
-        if (numerator < 0 && wholeNumber == 0) {
-            numerator *= -1;
-        }
+//        if (numerator < 0 && wholeNumber == 0) {
+//            numerator *= -1;
+//        }
         if (denominator < 0) {
             numerator *= -1;
             denominator *= -1;
