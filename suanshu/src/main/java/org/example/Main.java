@@ -10,7 +10,8 @@ public class Main {
         int r =10;
         r =10;
         Random random = new Random();
-        int hesis = random.nextInt(2);//选择是否添加括号
+        int []hesis = new int[1];
+        hesis[0]=   random.nextInt(2);//选择是否添加括号
         char []operater=Operator(r);
         int []decide=Decide(operater);
         int []calNumber=CalNumber(decide,r);

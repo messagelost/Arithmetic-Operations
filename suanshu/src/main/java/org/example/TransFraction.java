@@ -29,15 +29,14 @@ private  int []decide;
                 k+=2;
             }
         }
-        for (int i = 0; i < decide.length-1; i++) {
+        /*for (int i = 0; i < decide.length-1; i++) {
             System.out.printf("%d,%d,%d\n",fra[i].getWholeNumber(),fra[i].getNumerator(),fra[i].getDenominator());
-
-        }
+        }*/
         return fra;
     }
 
     public static void main(String[] args) {
-        int []a={10,9,7,5,6,4,5,6};
+        int []a={10,9,7,4,3,4,5,6};
         int []b={0,0,1,0,2,32};
         char []c={'a'};
         TransFraction trs=new TransFraction(c,a,b);

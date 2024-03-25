@@ -11,13 +11,21 @@ public class CreateOperation {
         int r = rValue;
         r =10;
         Random random = new Random();
-        int hesis = random.nextInt(2);//选择是否添加括号
-        char []operater=Operator(r);
-        //System.out.println(operater);
-        int []decide=Decide(operater);
-        //System.out.println(Arrays.toString(decide));
-        int []calNumber=CalNumber(decide,r);
-        //System.out.println(Arrays.toString(calNumber));
+         char []operater=Operator(r);
+         //System.out.println(operater);
+         int []decide=Decide(operater);
+         //System.out.println(Arrays.toString(decide));
+         int []calNumber=CalNumber(decide,r);
+         //System.out.println(Arrays.toString(calNumber));
+        char[]e = Create(decide,operater,calNumber);
+        System.out.println(e);
+
+    }
+
+    public static char[] Create(int[] decide,char[]operater,int[]calNumber){
+        Random random = new Random();
+        int[]hesis=new int[1];
+        hesis[0]= random.nextInt(2);//选择是否添加括号
         char[] e = My_string(decide,operater,calNumber).toCharArray();//数组e储存初始式子
         boolean CorreatOperation = true;
         while(true) {//判读式子是否正确
@@ -33,10 +41,12 @@ public class CreateOperation {
                 e = My_string(decide,operater,calNumber).toCharArray();//再次生成式子
             }
         }
-        char[] e1 = Final_Expresion(String.valueOf(e),decide,operater,calNumber,hesis);
-        System.out.println(e1);
+        if(operater.length!=1&&hesis[0]==1){
+            e = Final_Expresion(String.valueOf(e),decide,operater,calNumber,hesis);
+            //System.out.println(Arrays.toString(e1));
+        }
+        return e;
     }
-
     public static char[] Operator(int r) {
         Random random = new Random();
         int operatorNumber = random.nextInt(3) + 1;//随机生成1到3个运算符
@@ -90,7 +100,7 @@ public class CreateOperation {
            int j = 0;
            for (int i = 0; i < calnumber; ) {//随机生成数字
                if (decide[j] == 0) {//生成自然数
-                   int randomnumber = random.nextInt(r);
+                   int randomnumber = random.nextInt(r-1)+1;
                    calNumber[i] = randomnumber;
                    j++;
                    i++;
@@ -140,7 +150,7 @@ public class CreateOperation {
         return fomula;
        }
 
-    public  static char[] Final_Expresion(String fomula,int[]decide,char []operator,int []calNumber,int hesis){
+    public  static char[] Final_Expresion(String fomula,int[]decide,char []operator,int []calNumber,int[] hesis){
          Random random = new Random();
         int chooseNumber1;//前括号的后一个数值
         int chooseNumber2;//后括号的前一个数值
@@ -148,24 +158,24 @@ public class CreateOperation {
         int j = 0;
         int count = 0;
         while (true) {
-            if (hesis == 0 ) {
+            if (hesis[0] == 0 ) {
                 operation = fomula.toCharArray();
                 break;//hesis值为0则不添加括号
             }
             if(operator.length == 1){
-                hesis = 0;
+                hesis[0] = 0;
                 operation = fomula.toCharArray();
                 break;
             }
             else {
-                chooseNumber2 = random.nextInt(decide.length - 1) + 2;
+                chooseNumber2 = random.nextInt(decide.length - 2) + 2;
                 chooseNumber1 = random.nextInt(chooseNumber2 - 1) + 1;//随机选择
                 //System.out.println(chooseNumber1);
                 //System.out.println(chooseNumber2);
 
-                if(chooseNumber1==1&&chooseNumber2== decide.length){
+                if(chooseNumber1==1&&chooseNumber2== decide.length-1){
                     operation = fomula.toCharArray();
-                    hesis = 0;
+                    hesis[0]=0;
                     break;
                 }else{
                     fomula = "";//清空字符串重新添加
@@ -246,7 +256,7 @@ public class CreateOperation {
             faction[2] =  denominator;
         }else{//真分数
             int denominator = random.nextInt(r-1)+1;//生成分母
-            int numerator = random.nextInt(denominator);//生成分子
+            int numerator = random.nextInt(denominator)+1;//生成分子
             faction[0] = numerator;
             faction[1] =  denominator;
         }

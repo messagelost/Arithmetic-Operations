@@ -9,27 +9,26 @@ import static org.example.CreateOperation.*;
 
 public class ArithmeticOperation {
 
-    public static Fraction evaluateExpression(char[] operators, Fraction[]operands, int hesis) {
-        if ((operators.length != operands.length - 1) && hesis == 0) {
+    public static Fraction evaluateExpression(char[] operators, Fraction[]operands, int[] hesis) {
+        if ((operators.length != operands.length - 1) && hesis[0] == 0) {
             throw new IllegalArgumentException("运算符数量与运算数不匹配");
         }
-        if(((operators.length-2) != operands.length - 1) && hesis == 1){
+        if(((operators.length-2) != operands.length - 1) && hesis[0] == 1){
             throw new IllegalArgumentException("运算符数量与运算数不匹配");
         }
         Stack<Fraction> numberStack = new Stack<>();//数值栈
         Stack<Character> operatorStack = new Stack<>();//运算符栈
 
-        if(hesis==0){//无括号情况
-            int start = 1;
+
+
+        if(hesis[0]==0){//无括号情况
             int operandIndex = 0;//数值数
+            int[] start = new int[1];
+            start[0] = 1;
             for (int i = 0; i < operators.length; i++) {
                 char operator = operators[i];//获取运算符
                 Fraction operand = operands[operandIndex++];//获取分数
                 numberStack.push(operand);//将分数入栈
-
-                while (!operatorStack.isEmpty() && hasPrecedence(operator, operatorStack.peek(),hesis)) {
-                    performOperation(numberStack, operatorStack);
-                }
                 operatorStack.push(operator);//运算符入栈
             }
 
@@ -42,58 +41,37 @@ public class ArithmeticOperation {
             return numberStack.pop();
         }else{
             int operandIndex = 0;//数值数
-            int start = 0;
-            for (int i = 0; i < operators.length-1; i++) {
-                char operator = operators[i];//获取运算符
-                Fraction operand = operands[operandIndex++];//获取分数
-                numberStack.push(operand);//将分数入栈
-
-                while (!operatorStack.isEmpty() && hasPrecedence(operator, operatorStack.peek(),start)) {
-                    performOperation(numberStack, operatorStack);
-                }
-                if(operator=='('){
-                    operatorStack.push(operator);//符号入栈
-                    i++;
-                    char operator1 = operators[i];//获取运算符
-                    operatorStack.push(operator1);//运算符入栈
-                }else if(operator==')'){
-                    operatorStack.pop();
-                    if(operatorStack.isEmpty()){
-                        i++;
-                        char operator1 = operators[i];//获取运算符
-                        operatorStack.push(operator1);//运算符入栈
+            for (int i = 0; i < operators.length; i++) {
+                char operator = operators[i];
+                if (operator == '(') {
+                    operatorStack.push(operator);
+                } else if (operator == ')') {
+                    while (operatorStack.peek() != '(') {
+                        performOperation(numberStack, operatorStack);
                     }
-                }else{
-                    operatorStack.push(operator);//符号入栈
+                    operatorStack.pop(); // Pop the '('
+                } else if (operator == '+' || operator == '-' || operator == '\u00D7' || operator == '\u00F7') {
+                    while (!numberStack.isEmpty() && !operatorStack.isEmpty() && hasPrecedence(operator, operatorStack.peek())) {
+                        performOperation(numberStack, operatorStack);
+                    }
+                    operatorStack.push(operator);
                 }
+                if(operandIndex<operands.length){
+                    Fraction operand = operands[operandIndex++];//获取分数
+                    numberStack.push(operand);}//将分数入栈
             }
 
-            if(operandIndex==operators.length){
+            while (!operatorStack.isEmpty()) {
                 performOperation(numberStack, operatorStack);
-                return numberStack.pop();
-
-            }else{
-                numberStack.push(operands[operandIndex]);
-
-                while (!operatorStack.isEmpty()) {
-                    performOperation(numberStack, operatorStack);
-                }
-
-                return numberStack.pop();
             }
+
+            return numberStack.pop();
         }
 
     }
 
-    private static boolean hasPrecedence(char op1, char op2, int start) {
-        if(op1=='('){
-            start = 1;
-            return false;
-        }
-        if(start==0){
-            return false;
-        }
-        if ((op1 == '\u00D7' || op1 == '\u00F7') && (op2 == '+' || op2 == '-')) {
+    static boolean hasPrecedence(char op1, char op2) {
+        if (((op1 == '\u00D7' || op1 == '\u00F7') && (op2 == '+' || op2 == '-'||op2=='('))||((op1 == '+' || op1 == '-') && (op2=='('))) {
             return false;
         }
         return true;
@@ -120,7 +98,6 @@ public class ArithmeticOperation {
                 result = operand1.divide(operand2);
                 break;
         }
-
         numberStack.push(result);
     }
 
@@ -136,6 +113,27 @@ public class ArithmeticOperation {
         return result.toString().toCharArray();
     }
 
+    public static String getResult(Fraction result){//将Fraction类型结果转化为分数或自然数
+        String answer = new String();
+        if(result.getWholeNumber()==0){
+            if(result.getNumerator()==0){
+                answer = answer + String.valueOf(0);
+                return answer;
+            }else{
+                answer = answer + String.valueOf(result.getNumerator()) + "/" + String.valueOf(result.getDenominator());
+                return answer;
+            }
+        }else{
+            if(result.getNumerator()==0){
+                answer = answer + String.valueOf(result.getWholeNumber());
+                return answer;
+            }else{
+                answer = answer + String.valueOf(result.getWholeNumber()) + "'" + String.valueOf(result.getNumerator()) + "/" + String.valueOf(result.getDenominator());
+                return answer;
+            }
+        }
+    }
+
     public static void main(String[] args) {
         int r=10;
         char []operater=Operator(r);
@@ -143,11 +141,12 @@ public class ArithmeticOperation {
         int []calNumber=CalNumber(decide,r);
 
         Random random = new Random();
-        int hesis = random.nextInt(2);//选择是否添加括号
-        System.out.println(hesis);
+       // System.out.println(hesis);
         char[] e = My_string(decide,operater,calNumber).toCharArray();//数组e储存初始式子
         System.out.println(e);
-        if(hesis==1){
+        int[] hesis=new int[1];
+        hesis[0]=1;
+        if(hesis[0]==1){
             char[] e1 = Final_Expresion(String.valueOf(e),decide,operater,calNumber,hesis);//最终式子
             System.out.println(e1);
             operater = removeDigits(e1);//带括号的运算符数组
@@ -158,7 +157,7 @@ public class ArithmeticOperation {
         Fraction[] append=trans.tr();
         Fraction  result=evaluateExpression(operater,append,hesis);
         System.out.println(operater);
-        System.out.println("运算结果为：" + result.toDecimal());
+        System.out.println("运算结果为：" + getResult(result));
        /* char []operater=Operator(r);
         int []decide=Decide(operater);
         int []calNumber=CalNumber(decide,r);
