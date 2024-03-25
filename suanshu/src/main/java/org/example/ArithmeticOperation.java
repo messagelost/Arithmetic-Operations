@@ -73,6 +73,8 @@ public class ArithmeticOperation {
 
         //System.out.println(PexpretoSexpre(operation,decide,operands));
 
+        Fraction Error =new Fraction(9999,0,1);
+
         while(!upsidedown.isEmpty()&&upsidedown.peek().getWholeNumber()!=1000){
             Fraction calculate = upsidedown.pop();
             if(calculate.getWholeNumber()==666||calculate.getWholeNumber()==777||calculate.getWholeNumber()==888||calculate.getWholeNumber()==999){
@@ -90,7 +92,11 @@ public class ArithmeticOperation {
                         result = operand1.multiply(operand2);
                         break;
                     case 999:
-                        result = operand1.divide(operand2);
+                        if(operand2.getWholeNumber()==0&&operand2.getNumerator()==0){
+                            return Error;
+                        }else{
+                            result = operand1.divide(operand2);
+                        }
                         break;
                 }
                 //System.out.println(result.toDecimal());

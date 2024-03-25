@@ -10,7 +10,7 @@ public class MathExerciseGenerator {
 
     public static void main(String[] args) {
         if (args.length < 2) {
-            System.out.println("参数不足，请按以下格式输入：Myapp.exe -n <题目数量> -r <数值范围>");
+            System.out.println("Error please input：MathExerciseGenerator.jar -n <number of expression> -r <bound>");
             return;
         }
 
@@ -23,7 +23,7 @@ public class MathExerciseGenerator {
             String answerFile = args[3];
             checkAnswers(exerciseFile, answerFile);
         } else {
-            System.out.println("请输入正确的参数格式：-n <题目数量> -r <数值范围> 或 -e <题目文件名> -a <答案文件名>");
+            System.out.println("Error please input：MathExerciseGenerator.jar -n <number of expression> -r <bound> -a <answer file name>");
         }
     }
 
@@ -44,13 +44,13 @@ public class MathExerciseGenerator {
                 Fraction[] append=trans.tr();
 
                 char[]e = Create(decide,operater,calNumber);
-                if(UniqueStringGenerator(set,PexpretoSexpre(e,decide,append))){//判断是否重复
+                Fraction  result=evaluateExpression(e,decide,append);
+                if(UniqueStringGenerator(set,PexpretoSexpre(e,decide,append))&&result.getWholeNumber()!=9999){//判断是否重复
                     // 进行四则运算，可以使用随机数生成器来生成题目内容
-
-                    Fraction  result=evaluateExpression(e,decide,append);
                     // 计算答案
-                    String answer = "题目"+i+ "答案" + getResult(result);
-                    exercises.add("题目" + i+ e2+ '='); // 将题目添加到列表
+                    String str = new String(e);
+                    String answer = "expression"+i+ " answer" + " = " + getResult(result);
+                    exercises.add("e" + i + ": " + str + " = "); // 将题目添加到列表
                     answers.add(answer); // 将答案添加到列表
                     break;
                 }

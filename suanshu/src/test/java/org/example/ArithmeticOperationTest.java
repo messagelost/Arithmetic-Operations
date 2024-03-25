@@ -38,7 +38,7 @@ class ArithmeticOperationTest {
             System.out.println(PexpretoSexpre(e, decide, append));
             Fraction result = evaluateExpression(e,decide, append);
             System.out.println(operater);
-            System.out.println("运算结果为：" + getResult(result));
+            System.out.println("Calculate Answer:" + getResult(result));
             System.out.println();
         }
     }
@@ -53,11 +53,11 @@ class ArithmeticOperationTest {
         Fraction operand3 =new Fraction(10,7,14);
         int decide3 = 2;
         int wholenumber = operand3.getWholeNumber();
-        System.out.println("实"+wholenumber);
+        //System.out.println("实"+wholenumber);
         int numerator = operand3.getNumerator();
-        System.out.println("子"+numerator);
+        //System.out.println("子"+numerator);
         int denominator = operand3.getDenominator();
-        System.out.println("母"+denominator);
+        //System.out.println("母"+denominator);
         int number1 = OperandNumber(operand1,decide1);
         System.out.println(number1);
         int number2 = OperandNumber(operand2,decide2);
