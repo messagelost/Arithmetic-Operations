@@ -87,6 +87,9 @@ public class ArithmeticOperation {
                         break;
                     case 777:
                         result = operand1.subtract(operand2);
+                        if(result.toDecimal()<0){
+                            return Error;
+                        }
                         break;
                     case 888:
                         result = operand1.multiply(operand2);

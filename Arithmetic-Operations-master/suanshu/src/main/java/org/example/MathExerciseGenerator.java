@@ -21,6 +21,7 @@ public class MathExerciseGenerator {
         } else if (args[0].equals("-e") && args[2].equals("-a")) {
             String exerciseFile = args[1];
             String answerFile = args[3];
+
             checkAnswers(exerciseFile, answerFile);
         } else {
             System.out.println("Error please input：MathExerciseGenerator.jar -n <number of expression> -r <bound> -a <answer file name>");
@@ -73,12 +74,13 @@ public class MathExerciseGenerator {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
     }
 
     public static void checkAnswers(String exerciseFile, String answerFile) {
         List<String> exerciseList = readLinesFromFile(exerciseFile);
         List<String> answerList = readLinesFromFile(answerFile);
-
+        List<String> Userfile= readLinesFromFile("Userfile.txt");
         int total = exerciseList.size();
         int correct = 0;
         List<Integer> correctList = new ArrayList<>();
@@ -87,14 +89,16 @@ public class MathExerciseGenerator {
         for (int i = 0; i < total; i++) {
             // 检查答案是否正确，可以根据题目和答案列表中的内容进行比较
             // 比较是否重复
-            if (true) {
+            String[] e= answerList.get(i).split(" ");
+            String e1=e[3].toString();
+            String e2=Userfile.get(i).toString();
+            if (e1.equals(e2)) {
                 correct++;
                 correctList.add(i + 1);
             } else {
                 wrongList.add(i + 1);
             }
         }
-
         // 输出批改结果
         try (PrintWriter writer = new PrintWriter("Grade.txt")) {
             writer.println("Correct: " + correct + " (" + String.join(", ", correctList.toString()) + ")");
@@ -103,7 +107,6 @@ public class MathExerciseGenerator {
             e.printStackTrace();
         }
     }
-
     public static List<String> readLinesFromFile(String fileName) {
         List<String> lines = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {

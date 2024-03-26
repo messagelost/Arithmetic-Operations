@@ -16,7 +16,6 @@ public class ArithmeticExpressionEquivalence {
         Stack<String> operatorStack = new Stack<>();//运算符栈
 
         int operandNUmber = 0;
-
         String newArray = new String(operation);
         String[] newoperation = newArray.split(" ");
         //System.out.println(Arrays.toString(newoperation));
